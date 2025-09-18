@@ -4,3 +4,19 @@
 
 /.vs
 /Laboratorio 1/.vs
+
+# Compilación
+bin/
+obj/
+
+# Configuración de Visual Studio
+.vs/
+*.user
+*.suo
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Publicaciones
+publish/
