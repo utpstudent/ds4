@@ -1,11 +1,22 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
+
+/.vs
+/Laboratorio 1/.vs
+
+# Compilación
 bin/
 obj/
+
+# Configuración de Visual Studio
+.vs/
 *.user
 *.suo
-*.userprefs
-.vs/
-*.exe
-*.dll
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Publicaciones
+publish/
