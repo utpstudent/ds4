@@ -1,22 +1,24 @@
 ﻿using System;
 
-public class Aleatorios
+namespace laboratorio95
 {
-    private Random random; // atributo Random
+    internal class Aleatorios
+{
+    private Random random;
 
-    // Constructor
+
     public Aleatorios()
     {
         random = new Random();
     }
 
-    // i. Generar un número entre 2 números (mínimo y máximo)
+
     public int GenerarNumero(int min, int max)
     {
-        return random.Next(min, max + 1); // Next es excluyente en el max, por eso sumamos +1
+        return random.Next(min, max + 1);
     }
 
-    // ii. Generar un arreglo de números aleatorios entre 2 números
+
     public int[] GenerarArreglo(int cantidad, int min, int max)
     {
         int[] arreglo = new int[cantidad];
@@ -26,4 +28,5 @@ public class Aleatorios
         }
         return arreglo;
     }
+}
 }
