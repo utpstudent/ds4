@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "GetAll";
+}
+
+<h2>GetAll</h2>
+
+<h2>Laboratorio 19-2: Todos los Datos</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
+}
+
+@if (ViewBag.Values != null)
+{
+    <h3>Datos obtenidos:</h3>
+    <ul>
+        @foreach (var value in ViewBag.Values)
+        {
+            <li>@value</li>
+        }
+    </ul>
+}
+
+<div>
+    @Html.ActionLink("Volver al Inicio", "Index", "Home")
+</div>

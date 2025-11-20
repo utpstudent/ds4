@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "GetById";
+}
+
+<h2>Laboratorio 19-3: Dato especifico</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
+}
+
+@if (ViewBag.Value != null)
+{
+    <h3>Dato con ID @ViewBag.Id:</h3>
+    <p><strong>@ViewBag.Value</strong></p>
+}
+
+<div>
+    @Html.ActionLink("Volver al Inicio", "Index", "Home")
+</div>
+
