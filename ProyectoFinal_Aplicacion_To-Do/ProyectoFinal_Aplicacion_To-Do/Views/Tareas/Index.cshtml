@@ -1,0 +1,192 @@
+﻿@model IEnumerable<ProyectoFinal_Aplicacion_To_Do.Models.Tarea>
+@{
+    ViewBag.Title = "Lista de Tareas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>📋 Mi Lista de Tareas</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <p>
+        @Html.ActionLink("➕ Nueva Tarea", "Create", null, new { @class = "btn btn-primary" })
+    </p>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No hay tareas pendientes. ¡Agrega una nueva!
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Vence</th>
+                    <th>Prioridad</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="@(item.Completada ? "table-success" : "")">
+                        <td>
+                            <strong>@Html.DisplayFor(modelItem => item.Titulo)</strong>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Descripcion)
+                        </td>
+                        <td>
+                            @if (item.FechaVencimiento.HasValue)
+                            {
+                                <span class="@(item.FechaVencimiento < DateTime.Now && !item.Completada ? "text-danger" : "")">
+                                    @item.FechaVencimiento.Value.ToString("dd/MM/yyyy")
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin fecha</span>
+                            }
+                        </td>
+                        <td>
+                            @{
+                                string prioridadClass;
+                                string prioridadText;
+
+                                switch (item.Prioridad)
+                                {
+                                    case 1:
+                                        prioridadClass = "prioridad-badge prioridad-baja";
+                                        prioridadText = "Baja";
+                                        break;
+                                    case 2:
+                                        prioridadClass = "prioridad-badge prioridad-media";
+                                        prioridadText = "Media";
+                                        break;
+                                    case 3:
+                                        prioridadClass = "prioridad-badge prioridad-alta";
+                                        prioridadText = "Alta";
+                                        break;
+                                    default:
+                                        prioridadClass = "prioridad-badge";
+                                        prioridadText = "Indefinida";
+                                        break;
+                                }
+                            }
+                            <span class="@prioridadClass">@prioridadText</span>
+                        </td>
+                        <td>
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       class="form-check-input toggle-completada"
+                                       data-id="@item.Id"
+                                       @(item.Completada ? "checked" : "") />
+                                <label class="form-check-label">
+                                    @(item.Completada ? "Completada" : "Pendiente")
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                @Html.ActionLink("✏️", "Edit", new { id = item.Id },
+                                    new { @class = "btn btn-warning", title = "Editar" })
+                                <a href="#" class="btn btn-info" title="Detalles"
+                                   onclick="verDetalles(@item.Id); return false;">
+                                    👁
+                                </a>
+
+                                
+                                <form method="post" action="@Url.Action("EliminarDirecto", "Tareas")"
+                                      class="d-inline"
+                                      onsubmit="return confirmarEliminacion(this);">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-danger" title="Eliminar">
+                                        🗑️
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<div id="modalContainer"></div>
+
+@section Scripts {
+    <script>
+        // Función para confirmar eliminación
+        function confirmarEliminacion(form) {
+            var titulo = $(form).closest('tr').find('td:first-child strong').text();
+
+            return confirm('¿Estás seguro de eliminar la tarea:\n\n"' + titulo + '"?\n\nEsta acción no se puede deshacer.');
+        }
+
+        $(document).ready(function () {
+            // Toggle completada con AJAX
+            $('.toggle-completada').change(function () {
+                var tareaId = $(this).data('id');
+                var checkbox = $(this);
+
+                $.ajax({
+                    url: '@Url.Action("ToggleCompletada", "Tareas")',
+                    type: 'POST',
+                    data: {
+                        id: tareaId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert('Error: ' + response.message);
+                            checkbox.prop('checked', !checkbox.prop('checked'));
+                        }
+                    },
+                    error: function () {
+                        alert('Error al actualizar la tarea');
+                        checkbox.prop('checked', !checkbox.prop('checked'));
+                    }
+                });
+            });
+        });
+
+        function verDetalles(id) {
+            $.get('@Url.Action("DetallesModal", "Tareas")', { id: id }, function (data) {
+                $('#modalContainer').html(data);
+                $('#detallesModal').modal('show');
+            });
+        }
+
+        function irAEditar(id) {
+            const modalEl = document.getElementById('detallesModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+
+            if (modal) {
+                modal.hide();
+            }
+
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+
+            window.location.href = '/Tareas/Edit/' + id;
+        }
+    </script>
+}

@@ -1,0 +1,35 @@
+﻿@model parcial3.Models.Articulo
+
+<div>
+    <h4>Artículo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.Titulo)</dt>
+        <dd>@Html.DisplayFor(model => model.Titulo)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Resumen)</dt>
+        <dd>@Html.DisplayFor(model => model.Resumen)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Autores)</dt>
+        <dd>@Html.DisplayFor(model => model.Autores)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.PalabrasClave)</dt>
+        <dd>@Html.DisplayFor(model => model.PalabrasClave)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.DOI)</dt>
+        <dd>@Html.DisplayFor(model => model.DOI)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Estado)</dt>
+        <dd>@Html.DisplayFor(model => model.Estado)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.FechaPublicacion)</dt>
+        <dd>@Html.DisplayFor(model => model.FechaPublicacion)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.FechaRegistro)</dt>
+        <dd>@Html.DisplayFor(model => model.FechaRegistro)</dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Editar", new { id = Model.ArticuloID }) |
+    @Html.ActionLink("Volver a la lista", "Lista")
+</p>

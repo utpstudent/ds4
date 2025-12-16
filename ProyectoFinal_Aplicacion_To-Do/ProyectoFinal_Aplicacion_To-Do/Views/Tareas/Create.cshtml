@@ -1,0 +1,60 @@
+﻿@model ProyectoFinal_Aplicacion_To_Do.Models.Tarea
+@{
+    ViewBag.Title = "Nueva Tarea";
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+<h2>➕ Nueva Tarea</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card">
+        <div class="card-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Titulo, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Titulo, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingrese el título de la tarea" } })
+                @Html.ValidationMessageFor(model => model.Titulo, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label" })
+                @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", rows = "3", placeholder = "Descripción opcional" })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.FechaVencimiento, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.FechaVencimiento, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                @Html.ValidationMessageFor(model => model.FechaVencimiento, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Prioridad, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Prioridad,
+                    new SelectList(new[] {
+                        new SelectListItem { Value = "1", Text = "Baja" },
+                        new SelectListItem { Value = "2", Text = "Media" },
+                        new SelectListItem { Value = "3", Text = "Alta" }
+                    }, "Value", "Text", "2"),
+                    new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Prioridad, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-success">
+                    💾 Guardar Tarea
+                </button>
+                @Html.ActionLink("❌ Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Agregar referencia a jQuery Validation -->
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

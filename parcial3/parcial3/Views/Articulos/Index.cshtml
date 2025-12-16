@@ -1,0 +1,120 @@
+﻿@model IEnumerable<parcial3.Models.Articulo>
+
+@{
+    ViewBag.Title = "Dashboard de Artículos";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<!-- Tarjetas de estadísticas -->
+<div class="row">
+    <div class="col-md-3 col-sm-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Total Artículos</h3>
+            </div>
+            <div class="panel-body text-center">
+                <h1 style="margin: 0;">@ViewBag.TotalArticulos</h1>
+                <small>registrados en el sistema</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">Artículos Publicados</h3>
+            </div>
+            <div class="panel-body text-center">
+                <h1 style="margin: 0;">@ViewBag.ArticulosPublicados</h1>
+                <small>con estado "Publicado"</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Total Usuarios</h3>
+            </div>
+            <div class="panel-body text-center">
+                <h1 style="margin: 0;">@ViewBag.TotalUsuarios</h1>
+                <small>investigadores registrados</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h3 class="panel-title">Acciones</h3>
+            </div>
+            <div class="panel-body text-center">
+                @Html.ActionLink("Nuevo Artículo", "Crear", null,
+                    new { @class = "btn btn-success btn-block", style = "margin-bottom: 5px;" })
+                @Html.ActionLink("Ver Todos", "Lista", null,
+                    new { @class = "btn btn-primary btn-block" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Últimos artículos -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <i class="glyphicon glyphicon-list"></i> Últimos Artículos Registrados
+        </h3>
+    </div>
+    <div class="panel-body">
+        @if (Model.Any())
+        {
+            <div class="list-group">
+                @foreach (var item in Model)
+                {
+                    <div class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4 class="list-group-item-heading" style="margin-top: 0;">
+                                    @Html.DisplayFor(modelItem => item.Titulo)
+                                </h4>
+                                <p class="list-group-item-text">
+                                    <strong>Autores:</strong> @Html.DisplayFor(modelItem => item.Autores)<br />
+                                    <strong>Estado:</strong>
+                                    <span class="label
+                                        @(item.Estado == "Publicado" ? "label-success" :
+                                          item.Estado == "Aceptado" ? "label-primary" :
+                                          item.Estado == "En revisión" ? "label-warning" :
+                                          "label-default")">
+                                        @item.Estado
+                                    </span>
+                                    <strong>Registrado:</strong> @item.FechaRegistro.ToString("dd/MM/yyyy HH:mm")
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <div class="btn-group-vertical" style="margin-top: 10px;">
+                                    @Html.ActionLink("Ver Detalles", "Detalles", new { id = item.ArticuloID },
+                                        new { @class = "btn btn-xs btn-info" })
+                                    @Html.ActionLink("Editar", "Editar", new { id = item.ArticuloID },
+                                        new { @class = "btn btn-xs btn-warning" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="text-right" style="margin-top: 15px;">
+                @Html.ActionLink("Ver todos los artículos →", "Lista", null,
+                    new { @class = "btn btn-default" })
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <strong>No hay artículos registrados aún.</strong>
+                @Html.ActionLink("Crea el primero aquí", "Crear")
+            </div>
+        }
+    </div>
+</div>

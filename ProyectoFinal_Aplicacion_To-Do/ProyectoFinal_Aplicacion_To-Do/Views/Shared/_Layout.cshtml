@@ -1,0 +1,482 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - To-Do List Pro</title>
+    @Styles.Render("~/Content/css")
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== ESTILOS GENERALES ===== */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 70px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        
+        .navbar {
+            background: linear-gradient(90deg, #2c3e50 0%, #3498db 100%) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 10px 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            padding: 10px 15px !important;
+            border-radius: 6px;
+            margin: 0 3px;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .navbar-text {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        .container.body-content {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            margin-top: 25px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+            display: inline-block;
+            position: relative;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50%;
+            height: 3px;
+            background: #2ecc71;
+        }
+
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 15px 20px;
+        }
+
+        .alert-success {
+            background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        
+        .btn {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 10px 22px;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-outline-light {
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            color: white;
+            background: transparent;
+        }
+
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 15px;
+            font-size: 0.9rem;
+        }
+
+        
+        .footer {
+            background: linear-gradient(90deg, #2c3e50 0%, #34495e 100%);
+            color: #ecf0f1;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer strong {
+            color: #3498db;
+            font-size: 1.2rem;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .footer .text-muted {
+            color: #bdc3c7 !important;
+        }
+
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+       
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-info {
+            background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .badge-success {
+            background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        
+        .prioridad-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-width: 70px;
+            display: inline-block;
+            border: none;
+        }
+
+        .prioridad-alta {
+            background: linear-gradient(90deg, #fee2e2 0%, #fecaca 100%);
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+
+        .prioridad-media {
+            background: linear-gradient(90deg, #fef3c7 0%, #fde68a 100%);
+            color: #d97706;
+            border: 1px solid #fbbf24;
+        }
+
+        .prioridad-baja {
+            background: linear-gradient(90deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #16a34a;
+            border: 1px solid #86efac;
+        }
+
+        /* ===== USUARIO EN NAVBAR ===== */
+        .user-welcome {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .user-welcome i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @@media (max-width: 768px) {
+            .container.body-content {
+                padding: 20px;
+                margin: 15px;
+                border-radius: 10px;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+
+            .nav-link {
+                padding: 8px 12px !important;
+                margin: 2px 0;
+            }
+
+            .footer .text-right {
+                text-align: left !important;
+                margin-top: 20px;
+            }
+
+            .user-welcome {
+                margin-right: 10px;
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            body {
+                padding-top: 60px;
+            }
+
+            .container.body-content {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .navbar-nav {
+                text-align: center;
+            }
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container.body-content {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* ===== SCROLL PERSONALIZADO ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3498db, #2980b9);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #2980b9, #2c3e50);
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Tareas")">
+                <i class="fas fa-tasks"></i> To-Do List Pro
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Tareas")">
+                            <i class="fas fa-home"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Create", "Tareas")">
+                            <i class="fas fa-plus-circle"></i> Nueva Tarea
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ml-auto">
+                    @{
+                        
+                        var usuario = Session["UsuarioActual"] as string
+                                     ?? ViewData["UsuarioLayout"] as string
+                                     ?? ViewBag.UsuarioActual as string;
+
+                        
+                    }
+
+                    @if (!string.IsNullOrEmpty(usuario))
+                    {
+                        
+                        <li class="nav-item d-flex align-items-center">
+                            <div class="user-welcome">
+                                <i class="fas fa-user-circle"></i>
+                                <span class="navbar-text">@usuario</span>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Logout", "Account")" class="btn btn-outline-light btn-sm">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        
+                        <li class="nav-item">
+                            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-light">
+                                <i class="fas fa-sign-in-alt"></i> Ingresar
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="container body-content">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <i class="fas fa-check-circle mr-2"></i> @TempData["SuccessMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        @RenderBody()
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p>&copy; @DateTime.Now.Year - <strong>To-Do List Pro</strong></p>
+                        <p class="text-muted">
+                            <i class="fas fa-user mr-1"></i> Desarrollado por Miguel Martínez<br />
+                            <i class="fas fa-graduation-cap mr-1"></i> Proyecto Final - Desarrollo de Software IV<br />
+                            <i class="fas fa-university mr-1"></i> U.T.P. - F.I.S.C. | Prof. Regis Rivera
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <p>
+                            <small class="text-muted">
+                                <i class="fas fa-cogs mr-1"></i> Tecnologías:<br />
+                                ASP.NET MVC | C# | Entity Framework | SQL Server | Bootstrap
+                            </small>
+                        </p>
+                        <p>
+                            <span class="badge badge-info mr-2">
+                                <i class="fas fa-code-branch"></i> v1.0.0
+                            </span>
+                            <span class="badge badge-success">
+                                <i class="fas fa-rocket"></i> Producción
+                            </span>
+                        </p>
+                        <p class="mt-2">
+                            <small class="text-muted">
+                                <i class="far fa-calendar-alt mr-1"></i> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- SCRIPTS -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    
+    <script>
+        $(document).ready(function () {
+            
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+
+            
+            $('a[href^="#"]').on('click', function(event) {
+                var target = $(this.getAttribute('href'));
+                if(target.length) {
+                    event.preventDefault();
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 70
+                    }, 1000);
+                }
+            });
+
+            // hover 
+            $('.btn').hover(
+                function() {
+                    $(this).css('transform', 'translateY(-3px)');
+                },
+                function() {
+                    $(this).css('transform', 'translateY(0)');
+                }
+            );
+        });
+    </script>
+
+    @RenderSection("scripts", required: false)
+    @RenderSection("modals", required: false)
+</body>
+</html>

@@ -1,0 +1,61 @@
+﻿@model ProyectoFinal_Aplicacion_To_Do.Controllers.RegisterViewModel
+@{
+    ViewBag.Title = "Registro";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">📝 Crear Cuenta</h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Usuario)
+                        @Html.TextBoxFor(m => m.Usuario, new { @class = "form-control", placeholder = "Ej: juan123" })
+                        @Html.ValidationMessageFor(m => m.Usuario, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.NombreCompleto)
+                        @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control", placeholder = "Ej: Juan Pérez" })
+                        @Html.ValidationMessageFor(m => m.NombreCompleto, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email)
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Ej: juan@email.com" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password)
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Mínimo 6 caracteres" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ConfirmPassword)
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Repita la contraseña" })
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-block">Registrarse</button>
+
+                    <hr />
+
+                    <p class="text-center">
+                        ¿Ya tienes cuenta? @Html.ActionLink("Inicia sesión aquí", "Login")
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

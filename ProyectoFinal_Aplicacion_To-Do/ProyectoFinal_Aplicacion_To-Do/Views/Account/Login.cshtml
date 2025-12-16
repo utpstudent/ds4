@@ -1,0 +1,55 @@
+﻿@model ProyectoFinal_Aplicacion_To_Do.Controllers.LoginViewModel
+@{
+    ViewBag.Title = "Iniciar Sesión";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">🔐 Iniciar Sesión</h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Usuario)
+                        @Html.TextBoxFor(m => m.Usuario, new { @class = "form-control", placeholder = "Ingrese su usuario" })
+                        @Html.ValidationMessageFor(m => m.Usuario, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password)
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Ingrese su contraseña" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group form-check">
+                        @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })
+                        @Html.LabelFor(m => m.RememberMe, new { @class = "form-check-label" })
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+
+                    <hr />
+
+                    <p class="text-center">
+                        ¿No tienes cuenta? @Html.ActionLink("Regístrate aquí", "Register")
+                    </p>
+
+                    <!-- Usuario de prueba -->
+                    <div class="alert alert-info mt-3">
+                        <strong>Usuario de prueba:</strong><br />
+                        Usuario: <strong>demo</strong><br />
+                        Contraseña: <strong>demo123</strong>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
